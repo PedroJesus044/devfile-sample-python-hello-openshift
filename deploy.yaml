@@ -17,7 +17,7 @@ spec:
           image: python-image:latest
           ports:
             - name: http
-              containerPort: 8080
+              containerPort: 80
               protocol: TCP
           resources:
             requests:
@@ -33,6 +33,6 @@ spec:
     - name: http-8080
       port: 8080
       protocol: TCP
-      targetPort: 8080
+      targetPort: 80
   selector:
     app: python-app
