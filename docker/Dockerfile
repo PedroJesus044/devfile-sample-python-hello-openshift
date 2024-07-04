@@ -16,12 +16,12 @@ RUN yum install git wget epel-release tar httpd -y
 
 RUN dnf install https://rpms.remirepo.net/enterprise/remi-release-8.rpm -y
 RUN dnf module switch-to php:remi-7.4 -y
-RUN sudo dnf install php php-opcache php-gd php-curl php-mysqlnd php-intl php-json php-ldap php-mbstring php-mysqlnd php-xml php-zip php-process -y
+RUN dnf install php php-opcache php-gd php-curl php-mysqlnd php-intl php-json php-ldap php-mbstring php-mysqlnd php-xml php-zip php-process -y
 
 RUN wget https://download.owncloud.com/server/stable/owncloud-complete-latest.tar.bz2
 RUN tar -xjf owncloud-complete-latest.tar.bz2
 RUN cp -rf owncloud /var/www/html
-RUN sudo chown -R apache:apache /var/www/html
+RUN chown -R apache:apache /var/www/html
 
 RUN firewall-cmd --add-service=http --permanent
 RUN firewall-cmd --reload
