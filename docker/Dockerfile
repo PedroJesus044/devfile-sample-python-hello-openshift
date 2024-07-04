@@ -12,14 +12,14 @@ COPY . .
 
 USER root
 RUN yum update -y
-RUN yum install git wget epel-release tar httpd -y
+RUN yum install git wget epel-release tar httpd rsync -y
 
 RUN dnf install https://rpms.remirepo.net/enterprise/remi-release-8.rpm -y
 RUN dnf module switch-to php:remi-7.4 -y
 RUN dnf install php php-opcache php-gd php-curl php-mysqlnd php-intl php-json php-ldap php-mbstring php-mysqlnd php-xml php-zip php-process -y
 
 RUN git clone https://github.com/owncloud/core.git
-RUN cp -rf owncloud /var/www/html
+RUN rsync -a core/ /var/www/html
 RUN chown -R apache:apache /var/www/html
 
 RUN firewall-cmd --add-service=http --permanent
