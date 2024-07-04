@@ -1,28 +1,21 @@
-#FROM image-registry.openshift-image-registry.svc:5000/openshift/php@sha256:836494d2d6c89b08aee678c0a35bb31b1c7003b190aee4ea30bf04fb4d3a8ff3
-FROM registry.access.redhat.com/ubi7/php-73@sha256:191ddb13d435864565bbad4c8ecdc786fa2cf4f520cf10cb9276618886f26f13
+FROM ubi7/php-73
 
-# By default, listen on port 8081
-EXPOSE 8080/tcp
+# Add application sources
+ADD app-src .
 
-# Set the working directory in the container
-WORKDIR /var/www/html
+# Install the dependencies
+RUN TEMPFILE=$(mktemp) && \
+    curl -o "$TEMPFILE" "https://getcomposer.org/installer" && \
+    php <"$TEMPFILE" && \
+    ./composer.phar install --no-interaction --no-ansi --optimize-autoloader
 
-# Copy the content of the local src directory to the working directory
-USER root
-
-COPY index.php /var/www/html/
-#RUN yum update -y
-#RUN yum install git wget epel-release tar httpd rsync firewalld -y
-
-#RUN dnf install https://rpms.remirepo.net/enterprise/remi-release-8.rpm -y
-#RUN dnf module switch-to php:remi-7.4 -y
-#RUN dnf install php php-opcache php-gd php-curl php-mysqlnd php-intl php-json php-ldap php-mbstring php-mysqlnd php-xml php-zip php-process -y
-
-#RUN git clone https://github.com/owncloud/core.git
-#RUN rsync -a core/ /var/www/html
-#RUN chown -R apache:apache /var/www/html
-
-#RUN firewall-cmd --add-service=http --permanent
-#RUN firewall-cmd --reload
-
-CMD [ "/usr/libexec/s2i/run" ]
+# Run script uses standard ways to configure the PHP application
+# and execs httpd -D FOREGROUND at the end
+# See more in <version>/s2i/bin/run in this repository.
+# Shortly what the run script does: The httpd daemon and php needs to be
+# configured, so this script prepares the configuration based on the container
+# parameters (e.g. available memory) and puts the configuration files into
+# the approriate places.
+# This can obviously be done differently, and in that case, the final CMD
+# should be set to "CMD httpd -D FOREGROUND" instead.
+CMD /usr/libexec/s2i/run
