@@ -2,7 +2,7 @@
 FROM rockylinux:8
 
 # By default, listen on port 8081
-EXPOSE 8080/tcp
+EXPOSE 80/tcp
 
 # Set the working directory in the container
 WORKDIR /projects
