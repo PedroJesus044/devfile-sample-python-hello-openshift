@@ -10,6 +10,8 @@ WORKDIR /projects
 # Copy the content of the local src directory to the working directory
 COPY . .
 
+RUN apt-install git -y
+
 # Install any dependencies
 RUN \
   if [ -f requirements.txt ]; \
