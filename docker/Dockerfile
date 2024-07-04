@@ -3,3 +3,5 @@ FROM owncloud/server
 
 # By default, listen on port 8081
 EXPOSE 8080/tcp
+
+USER root
