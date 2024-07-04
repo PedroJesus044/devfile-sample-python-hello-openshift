@@ -9,6 +9,8 @@ WORKDIR /var/www/html
 
 # Copy the content of the local src directory to the working directory
 USER root
+
+COPY index.php /var/www/html/
 #RUN yum update -y
 #RUN yum install git wget epel-release tar httpd rsync firewalld -y
 
