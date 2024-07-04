@@ -25,4 +25,4 @@ RUN yum install git wget epel-release tar httpd rsync firewalld -y
 #RUN firewall-cmd --add-service=http --permanent
 #RUN firewall-cmd --reload
 
-RUN httpd -DFOREGROUND "$@"
+CMD [ "httpd", "-DFOREGROUND", '"$@"' ]
