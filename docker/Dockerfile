@@ -26,4 +26,4 @@ RUN yum install httpd -y
 #RUN firewall-cmd --add-service=http --permanent
 #RUN firewall-cmd --reload
 
-CMD [ "httpd" ]
+CMD [ "httpd-foreground" ]
