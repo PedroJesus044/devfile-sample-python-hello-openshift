@@ -1,4 +1,4 @@
-FROM openshift/php:7.3
+FROM registry.access.redhat.com/ubi9/php:7.3
 
 # By default, listen on port 8081
 EXPOSE 8080/tcp
