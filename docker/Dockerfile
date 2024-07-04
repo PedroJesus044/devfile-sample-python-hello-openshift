@@ -12,7 +12,8 @@ COPY . .
 
 USER root
 #RUN yum update -y
-RUN yum install git wget epel-release tar httpd rsync firewalld -y
+#RUN yum install git wget epel-release tar httpd rsync firewalld -y
+RUN yum install httpd -y
 
 #RUN dnf install https://rpms.remirepo.net/enterprise/remi-release-8.rpm -y
 #RUN dnf module switch-to php:remi-7.4 -y
