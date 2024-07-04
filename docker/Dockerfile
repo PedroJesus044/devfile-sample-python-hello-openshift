@@ -10,7 +10,7 @@ WORKDIR /projects
 # Copy the content of the local src directory to the working directory
 COPY . .
 
-RUN yum install git -y
+RUN sudo yum install git -y
 
 # Install any dependencies
 RUN \
