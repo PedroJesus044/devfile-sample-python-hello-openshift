@@ -1,19 +1,16 @@
 #FROM image-registry.openshift-image-registry.svc:5000/openshift/php@sha256:836494d2d6c89b08aee678c0a35bb31b1c7003b190aee4ea30bf04fb4d3a8ff3
-FROM rockylinux:8
+FROM registry.access.redhat.com/ubi7/php-73@sha256:191ddb13d435864565bbad4c8ecdc786fa2cf4f520cf10cb9276618886f26f13
 
 # By default, listen on port 8081
-EXPOSE 80/tcp
+EXPOSE 8080/tcp
 
 # Set the working directory in the container
-WORKDIR /projects
+WORKDIR /var/www/html
 
 # Copy the content of the local src directory to the working directory
-COPY . .
-
 USER root
 #RUN yum update -y
 #RUN yum install git wget epel-release tar httpd rsync firewalld -y
-RUN yum install httpd -y
 
 #RUN dnf install https://rpms.remirepo.net/enterprise/remi-release-8.rpm -y
 #RUN dnf module switch-to php:remi-7.4 -y
@@ -26,4 +23,4 @@ RUN yum install httpd -y
 #RUN firewall-cmd --add-service=http --permanent
 #RUN firewall-cmd --reload
 
-CMD [ "service", "httpd" , "start" ]
+CMD [ "/usr/libexec/s2i/run" ]
