@@ -1,28 +1,25 @@
-#FROM image-registry.openshift-image-registry.svc:5000/openshift/php@sha256:836494d2d6c89b08aee678c0a35bb31b1c7003b190aee4ea30bf04fb4d3a8ff3
-FROM rockylinux:8
-
-# By default, listen on port 8081
-EXPOSE 80/tcp
-
-# Set the working directory in the container
-WORKDIR /projects
-
-# Copy the content of the local src directory to the working directory
-COPY . .
-
+FROM docker.io/owncloud/base:20.04@sha256:50f78693a2fc41b13cbcae2db889c8281eca0d4b42cc7ff96786025935e7f3c1
 USER root
-RUN yum update -y
-RUN yum install git wget epel-release tar httpd rsync firewalld -y
 
-RUN dnf install https://rpms.remirepo.net/enterprise/remi-release-8.rpm -y
-RUN dnf module switch-to php:remi-7.4 -y
-RUN dnf install php php-opcache php-gd php-curl php-mysqlnd php-intl php-json php-ldap php-mbstring php-mysqlnd php-xml php-zip php-process -y
+LABEL maintainer="ownCloud GmbH <devops@owncloud.com>" \
+  org.opencontainers.image.authors="ownCloud DevOps <devops@owncloud.com>" \
+  org.opencontainers.image.vendor="ownCloud GmbH" \
+  org.opencontainers.image.title="ownCloud Server" \
+  org.opencontainers.image.description="ownCloud - Secure Collaboration Platform" \
+  org.opencontainers.image.url="https://hub.docker.com/r/owncloud/server" \
+  org.opencontainers.image.source="https://github.com/owncloud-docker/server" \
+  org.opencontainers.image.documentation="https://github.com/owncloud-docker/server"
 
-RUN git clone https://github.com/owncloud/core.git
-RUN rsync -a core/ /var/www/html
-RUN chown -R apache:apache /var/www/html
+ADD owncloud.tar.bz2 /var/www/
 
-RUN firewall-cmd --add-service=http --permanent
-RUN firewall-cmd --reload
+ADD overlay /
+WORKDIR /var/www/owncloud
 
-RUN httpd -DFOREGROUND "$@"
+RUN find /var/www/owncloud \( \! -user www-data -o \! -group root \) -print0 | xargs -r -0 chown www-data:root && \
+  chmod g+w /var/www/owncloud /var/www/owncloud/.htaccess
+
+VOLUME ["/mnt/data"]
+EXPOSE 8080
+
+ENTRYPOINT ["/usr/bin/entrypoint"]
+CMD ["/usr/bin/owncloud", "server"]
