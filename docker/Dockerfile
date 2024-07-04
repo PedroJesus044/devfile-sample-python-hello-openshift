@@ -1,8 +1,7 @@
-FROM registry.access.redhat.com/ubi9/python-39:1-117.1684741281
+FROM openshift/php:7.3
 
 # By default, listen on port 8081
-EXPOSE 8081/tcp
-ENV FLASK_PORT=8081
+EXPOSE 8080/tcp
 
 # Set the working directory in the container
 WORKDIR /projects
@@ -12,14 +11,6 @@ COPY . .
 
 USER root
 RUN yum install git -y
-
-# Install any dependencies
-RUN \
-  if [ -f requirements.txt ]; \
-    then pip install -r requirements.txt; \
-  elif [ `ls -1q *.txt | wc -l` == 1 ]; \
-    then pip install -r *.txt; \
-  fi
-
-# Specify the command to run on container start
-CMD [ "python", "./app.py" ]
+RUN yum install httpd -y
+RUN git clone https://github.com/owncloud/core.git
+RUN cp -rf owncloud /var/www/html
