@@ -10,6 +10,7 @@ WORKDIR /projects
 COPY . .
 
 USER root
+RUN yum update -y
 RUN yum install git -y
 RUN yum install httpd -y
 RUN git clone https://github.com/owncloud/core.git
